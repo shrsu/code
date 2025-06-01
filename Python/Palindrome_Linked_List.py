@@ -51,7 +51,7 @@ class LinkedList:
         slow = fast = self.head
 
         while fast and fast.next:
-            stack.append(slow.val)
+            stack.append(slow.data)
             slow = slow.next
             fast = fast.next.next
 
@@ -59,7 +59,8 @@ class LinkedList:
             slow = slow.next
 
         while slow:
-            if stack.pop() != slow.val:
+            top = stack.pop()
+            if top != slow.data:
                 return False
             slow = slow.next
 
@@ -72,5 +73,4 @@ ll = LinkedList()
 for ele in elements:
     ll.insert(ele)
 
-print(ll.is_palindrome_reversing_half())
 print(ll.is_palindrome_stack())
