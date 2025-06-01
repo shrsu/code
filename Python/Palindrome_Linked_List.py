@@ -20,7 +20,8 @@ class LinkedList:
 
         current.next = new_node
 
-    def is_palindrome(self):
+    def is_palindrome_reversing_half(self):
+        # Not a good approach because it modifies the original list
         slow = self.head
         fast = self.head
 
@@ -45,6 +46,25 @@ class LinkedList:
 
         return True
 
+    def is_palindrome_stack(self):
+        stack = []
+        slow = fast = self.head
+
+        while fast and fast.next:
+            stack.append(slow.val)
+            slow = slow.next
+            fast = fast.next.next
+
+        if fast:
+            slow = slow.next
+
+        while slow:
+            if stack.pop() != slow.val:
+                return False
+            slow = slow.next
+
+        return True
+    
 n = int(input())
 elements = map(int, input().split())
 
@@ -52,4 +72,5 @@ ll = LinkedList()
 for ele in elements:
     ll.insert(ele)
 
-print(ll.is_palindrome())
+print(ll.is_palindrome_reversing_half())
+print(ll.is_palindrome_stack())
