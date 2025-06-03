@@ -1,42 +1,45 @@
-def precedence(op):
-    if op in ('+', '-'):
-        return 1
-    elif op in ('*', '/'):
+def is_operator(c):
+    return c in ['+', '-', '*', '/', '^']
+
+def precedence(c):
+    if c == '^':
+        return 3
+    elif c == '*' or c == '/':
         return 2
-    return 0
+    elif c == '+' or c == '-':
+        return 1
+    else:
+        return -1
 
-def infix_to_prefix(infix_expr):
-    def is_operator(c):
-        return c in "+-*/"
-
-    def not_greater(op, top_op):
-        return precedence(op) <= precedence(top_op)
-
-    infix_expr = infix_expr[::-1]
-    infix_expr = ''.join(['(' if c == ')' else ')' if c == '(' else c for c in infix_expr])
+def infix_to_prefix(infix):
+    infix = infix[::-1]
+    
+    infix = ''.join(['(' if c == ')' else ')' if c == '(' else c for c in infix])
 
     stack = []
-    output = []
+    result = []
 
-    for char in infix_expr:
-        if char.isalnum():
-            output.append(char)
-        elif char == '(':
-            stack.append(char)
-        elif char == ')':
+    for c in infix:
+        if c.isalnum():  
+            result.append(c)
+        elif c == '(':
+            stack.append(c)
+        elif c == ')':
             while stack and stack[-1] != '(':
-                output.append(stack.pop())
-            stack.pop() 
-        elif is_operator(char):
-            while stack and is_operator(stack[-1]) and not_greater(char, stack[-1]):
-                output.append(stack.pop())
-            stack.append(char)
+                result.append(stack.pop())
+            stack.pop()  
+        elif is_operator(c):
+            while (stack and precedence(c) < precedence(stack[-1])):
+                result.append(stack.pop())
+            while (stack and precedence(c) == precedence(stack[-1]) and c != '^'):
+                result.append(stack.pop())
+            stack.append(c)
 
     while stack:
-        output.append(stack.pop())
+        result.append(stack.pop())
 
-    return ''.join(output[::-1])
+    return ''.join(result[::-1])
 
-infix = input("Enter infix expression: ")
-prefix = infix_to_prefix(infix)
-print("Prefix expression:", prefix)
+infix_expr = "(A-B/C)*(A/K-L)"
+prefix_expr = infix_to_prefix(infix_expr)
+print("Prefix expression:", prefix_expr)
